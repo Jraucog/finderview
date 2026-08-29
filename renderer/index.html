@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: file:; media-src 'self' data: file:;" />
+  <title>FinderView</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- ── Sidebar ── -->
+    <aside id="sidebar">
+      <div id="sidebar-inner"></div>
+      <div id="sidebar-bottom">
+        <button id="btn-settings" class="sidebar-settings-btn" title="Configuración" aria-label="Configuración">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+            <path d="M6.3 1.5H8.7l.4 1.6c.4.1.8.3 1.1.5l1.5-.8 1.7 1.7-.8 1.5c.2.4.4.7.5 1.1l1.6.4v2.4l-1.6.4c-.1.4-.3.8-.5 1.1l.8 1.5-1.7 1.7-1.5-.8c-.4.2-.7.4-1.1.5l-.4 1.6H6.3l-.4-1.6c-.4-.1-.8-.3-1.1-.5l-1.5.8-1.7-1.7.8-1.5c-.2-.4-.4-.7-.5-1.1L1.5 8.7V6.3L3.1 5.9c.1-.4.3-.8.5-1.1l-.8-1.5L4.5 1.6l1.5.8c.4-.2.7-.4 1.1-.5L6.3 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+            <circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.3"/>
+          </svg>
+          <span>Configuración</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── Left divider ── -->
+    <div id="divider"></div>
+
+    <!-- ── Main content ── -->
+    <main id="content">
+
+      <!-- Tab Bar -->
+      <div id="tab-bar">
+        <div id="tab-list"></div>
+        <button id="btn-new-tab" class="tab-add-btn" title="Nueva pestaña (⌘T)" aria-label="Nueva pestaña">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <header id="toolbar">
+        <!-- Sidebar Toggle & Navigation History Buttons -->
+        <div id="nav-history">
+          <button id="btn-toggle-sidebar" class="nav-hist-btn" title="Ocultar/Mostrar Barra Lateral (⌘B)" aria-label="Barra Lateral">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <rect x="1.5" y="2" width="12" height="11" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
+              <line x1="5.5" y1="2" x2="5.5" y2="13" stroke="currentColor" stroke-width="1.3"/>
+            </svg>
+          </button>
+          <button id="btn-hist-back" class="nav-hist-btn" title="Atrás (⌘[)" aria-label="Atrás" disabled>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M8.5 3.5L5 7l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button id="btn-hist-forward" class="nav-hist-btn" title="Adelante (⌘])" aria-label="Adelante" disabled>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M5.5 3.5L9 7l-3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button id="btn-hist-up" class="nav-hist-btn" title="Carpeta Superior (⌘↑)" aria-label="Carpeta Superior">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M3.5 8.5L7 5l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Smart Filters -->
+        <div id='smart-filters'>
+          <button class='smart-filter' data-type='image' title='Imágenes'>🖼️</button>
+          <button class='smart-filter' data-type='audio' title='Audio'>🎵</button>
+          <button class='smart-filter' data-type='video' title='Video'>🎥</button>
+          <button class='smart-filter' data-type='doc' title='Documentos'>📄</button>
+        </div>
+
+        <div style="flex:1;"></div>
+
+        <!-- Quick Jump / Command Palette -->
+        <button id="btn-cmd-palette" class="tool-btn" title="Paleta de Comandos / Salto Rápido (⌘K)">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+            <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span>⌘K</span>
+        </button>
+
+        <!-- Search bar -->
+        <div id="search-wrap" class="search-collapsed">
+          <button id="search-icon-btn" title="Buscar (⌘F)" aria-label="Buscar">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M10 10l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <input id="search-input" type="text" placeholder="Buscar en esta carpeta…" autocomplete="off" spellcheck="false" />
+          <button id="search-clear" class="hidden" aria-label="Limpiar búsqueda">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Actions -->
+        <div id="toolbar-actions">
+          <button id="btn-view-list" class="view-btn active" title="Vista lista (⌘1)" aria-label="Lista">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <rect x="2" y="2.5" width="11" height="1.4" rx="0.7" fill="currentColor"/>
+              <rect x="2" y="6.8" width="11" height="1.4" rx="0.7" fill="currentColor"/>
+              <rect x="2" y="11.1" width="11" height="1.4" rx="0.7" fill="currentColor"/>
+            </svg>
+          </button>
+          <button id="btn-view-grid" class="view-btn" title="Vista íconos (⌘2)" aria-label="Íconos">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <rect x="1.5" y="1.5" width="5" height="5" rx="1" fill="currentColor"/>
+              <rect x="8.5" y="1.5" width="5" height="5" rx="1" fill="currentColor"/>
+              <rect x="1.5" y="8.5" width="5" height="5" rx="1" fill="currentColor"/>
+              <rect x="8.5" y="8.5" width="5" height="5" rx="1" fill="currentColor"/>
+            </svg>
+          </button>
+          <button id="btn-view-gallery" class="view-btn" title="Vista galería / multimedia (⌘3)" aria-label="Galería">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <rect x="1.5" y="2" width="12" height="7.5" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
+              <rect x="2" y="11.5" width="2.5" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="6.25" y="11.5" width="2.5" height="2" rx="0.5" fill="currentColor"/>
+              <rect x="10.5" y="11.5" width="2.5" height="2" rx="0.5" fill="currentColor"/>
+            </svg>
+          </button>
+          <button id="btn-toggle-split" class="view-btn" title="Modo Doble Panel (⌘D)" aria-label="Doble Panel">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <rect x="1.5" y="2" width="12" height="11" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
+              <line x1="7.5" y1="2" x2="7.5" y2="13" stroke="currentColor" stroke-width="1.3"/>
+            </svg>
+          </button>
+          <button id="btn-toggle-preview" class="view-btn" title="Ocultar/Mostrar Previsualización (⌘⌥P)" aria-label="Previsualización">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+              <rect x="1.5" y="2" width="12" height="11" rx="1.2" stroke="currentColor" stroke-width="1.3"/>
+              <line x1="9.5" y1="2" x2="9.5" y2="13" stroke="currentColor" stroke-width="1.3"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Column headers (rendered by JS) -->
+      <div id="col-headers"></div>
+
+      <!-- Main Dual-Pane / File View Container -->
+      <div id="panes-container">
+        <!-- Primary file list pane -->
+        <div id="primary-pane" class="pane-wrap">
+          <div id="file-list" role="listbox" aria-label="Archivos"></div>
+          <!-- Gallery View Container (hidden by default) -->
+          <div id="gallery-view" class="hidden">
+            <div id="gallery-hero">
+              <div id="gallery-hero-preview"></div>
+              <div id="gallery-hero-meta"></div>
+            </div>
+            <div id="gallery-strip"></div>
+          </div>
+        </div>
+
+        <!-- Secondary file list pane (for Dual Pane mode) -->
+        <div id="split-divider" class="hidden"></div>
+        <div id="secondary-pane" class="pane-wrap hidden">
+          <div id="secondary-col-headers"></div>
+          <div id="secondary-file-list" role="listbox" aria-label="Archivos panel secundario"></div>
+        </div>
+      </div>
+
+      <!-- Persistent Background Audio Player Bar -->
+      <div id="persistent-player" class="hidden">
+        <div class="pp-info">
+          <img id="pp-cover" class="pp-cover" src="" alt="" />
+          <div class="pp-meta">
+            <span id="pp-title" class="pp-title">Reproduciendo</span>
+            <span id="pp-artist" class="pp-artist">FinderView Audio</span>
+          </div>
+        </div>
+        <div class="pp-controls">
+          <button id="pp-prev" title="Anterior">⏮</button>
+          <button id="pp-play" class="pp-play-btn" title="Pausar / Reanudar">⏸</button>
+          <button id="pp-next" title="Siguiente">⏭</button>
+        </div>
+        <div class="pp-seek-wrap">
+          <span id="pp-time-curr" class="pp-time">0:00</span>
+          <div id="pp-seekbar" class="pp-seekbar">
+            <div id="pp-seek-fill" class="pp-seek-fill"></div>
+          </div>
+          <span id="pp-time-dur" class="pp-time">0:00</span>
+        </div>
+        <div class="pp-actions">
+          <button id="pp-open-ql" title="Ver visor grande">🪟</button>
+          <button id="pp-close" title="Cerrar reproductor">×</button>
+        </div>
+      </div>
+
+      <!-- Path bar (macOS Finder style bottom breadcrumb) -->
+      <div id="pathbar">
+        <div id="breadcrumb"></div>
+      </div>
+
+      <!-- Status bar -->
+      <footer id="statusbar">
+        <span id="status-text"></span>
+        <div class="status-right-group">
+          <span id="status-hint"></span>
+          <div class="powered-by-ag" title="Desarrollado con Google Antigravity">
+            <span class="ag-icon">✦</span>
+            <span>Powered by <span class="ag-text">Antigravity</span></span>
+          </div>
+        </div>
+      </footer>
+
+    </main>
+    <!-- Drop Stack -->
+    <div id="drop-stack" class="hidden">
+      <div class="ds-header">
+        <div class="ds-title-wrap">
+          <span>📦 Drop Stack</span>
+          <span id="ds-count" class="ds-badge">0</span>
+        </div>
+        <button id="ds-clear" title="Vaciar Drop Stack">&times;</button>
+      </div>
+      <div id="ds-items"></div>
+      <div class="ds-footer">
+        <button id="ds-btn-move" class="ds-action-btn" title="Mover todos los ítems a la carpeta actual">📥 Mover aquí</button>
+        <button id="ds-btn-copy" class="ds-action-btn" title="Copiar todos los ítems a la carpeta actual">📋 Copiar aquí</button>
+      </div>
+    </div>
+
+    <!-- ── Preview divider ── -->
+    <div id="preview-divider" class="hidden"></div>
+
+    <!-- ── Preview panel (right) ── -->
+    <aside id="preview-panel" class="hidden">
+      <div id="preview-inner">
+        <div id="preview-placeholder">
+          <div class="prev-empty-icon">👆</div>
+          <p>Selecciona un elemento para ver su información</p>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /#app -->
+
+  <!-- ── Command Palette (⌘K / ⌘P) ── -->
+  <div id="cmd-palette-overlay" class="hidden">
+    <div id="cmd-palette">
+      <div id="cmd-palette-header">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <input id="cmd-palette-input" type="text" placeholder="Escribe para buscar archivos, carpetas o comandos..." autocomplete="off" spellcheck="false" />
+        <span class="cmd-shortcut-hint">ESC para cerrar</span>
+      </div>
+      <div id="cmd-palette-results"></div>
+    </div>
+  </div>
+
+  <!-- ── Batch Rename Modal ── -->
+  <div id="batch-rename-overlay" class="hidden">
+    <div id="batch-rename-modal">
+      <div class="brm-header">
+        <span>✏️ Renombrado Masivo</span>
+        <button id="brm-close" class="brm-close-btn">&times;</button>
+      </div>
+      <div class="brm-body">
+        <div class="brm-tabs">
+          <button class="brm-tab active" data-mode="replace">Buscar y Reemplazar</button>
+          <button class="brm-tab" data-mode="prefix-suffix">Agregar Texto</button>
+          <button class="brm-tab" data-mode="numbering">Numeración Correlativa</button>
+        </div>
+
+        <div id="brm-form-replace" class="brm-form-group">
+          <div class="brm-field">
+            <label>Buscar:</label>
+            <input id="brm-find" type="text" placeholder="ej. [DJ Pack]" />
+          </div>
+          <div class="brm-field">
+            <label>Reemplazar con:</label>
+            <input id="brm-replace" type="text" placeholder="ej. (vacío para borrar)" />
+          </div>
+          <label class="brm-checkbox">
+            <input id="brm-case-sensitive" type="checkbox" /> Distinguir mayúsculas/minúsculas
+          </label>
+        </div>
+
+        <div id="brm-form-prefix-suffix" class="brm-form-group hidden">
+          <div class="brm-field">
+            <label>Prefijo (al inicio):</label>
+            <input id="brm-prefix" type="text" placeholder="ej. 2026_" />
+          </div>
+          <div class="brm-field">
+            <label>Sufijo (al final):</label>
+            <input id="brm-suffix" type="text" placeholder="ej. _Remaster" />
+          </div>
+        </div>
+
+        <div id="brm-form-numbering" class="brm-form-group hidden">
+          <div class="brm-field">
+            <label>Texto base:</label>
+            <input id="brm-num-base" type="text" placeholder="ej. Track" />
+          </div>
+          <div class="brm-field">
+            <label>Comenzar en:</label>
+            <input id="brm-num-start" type="number" value="1" min="1" />
+          </div>
+          <div class="brm-field">
+            <label>Dígitos (ej. 2 = 01, 02):</label>
+            <input id="brm-num-digits" type="number" value="2" min="1" max="5" />
+          </div>
+        </div>
+
+        <div class="brm-preview-wrap">
+          <div class="brm-preview-title">Vista Previa de Cambios (<span id="brm-count">0</span> ítems)</div>
+          <div id="brm-preview-list" class="brm-preview-list"></div>
+        </div>
+      </div>
+      <div class="brm-footer">
+        <button id="brm-btn-cancel" class="brm-btn brm-btn-sec">Cancelar</button>
+        <button id="brm-btn-apply" class="brm-btn brm-btn-pri">Aplicar Renombrado</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Disk Analyzer Modal ── -->
+  <div id="disk-analyzer-overlay" class="cmd-palette-overlay hidden">
+    <div id="disk-analyzer-modal" class="brm-window" style="width: 520px;">
+      <div class="brm-header">
+        <div class="brm-title">📊 Analizador de Espacio en Disco</div>
+        <button id="disk-analyzer-close" class="brm-close">✕</button>
+      </div>
+      <div class="brm-body" id="disk-analyzer-body">
+        <div style="text-align:center;padding:24px;color:var(--t2);">Cargando análisis...</div>
+      </div>
+      <div class="brm-footer">
+        <button id="disk-analyzer-btn-close" class="brm-btn brm-btn-pri">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Settings overlay + panel ── -->
+  <div id="settings-overlay" class="hidden"></div>
+  <aside id="settings-panel" class="hidden" aria-label="Configuración">
+    <div id="settings-header">
+      <span id="settings-title">Configuración</span>
+      <button id="settings-close" aria-label="Cerrar configuración">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+          <path d="M1 1l9 9M10 1L1 10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div id="settings-body"></div>
+  </aside>
+
+  <!-- ── Quick Look (multi-type preview, like Finder) ── -->
+  <div id="ql-overlay" class="hidden" role="dialog" aria-label="Vista previa">
+    <div id="ql-backdrop"></div>
+    <div id="ql-window">
+      <div id="ql-topbar">
+        <span id="ql-topbar-icon"></span>
+        <span id="ql-filename"></span>
+        <button id="ql-close" title="Cerrar (Espacio · Esc)" aria-label="Cerrar vista previa">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+            <path d="M1 1l9 9M10 1L1 10" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div id="ql-body"></div>
+      <div id="ql-footer">
+        <span id="ql-footer-info"></span>
+        <span id="ql-footer-hint">Espacio · Esc para cerrar</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
