@@ -305,8 +305,17 @@ ipcMain.handle('fs:stat', async (_event, filePath) => {
   } catch (err) { return { error: err.message }; }
 });
 
+function isProtectedSystemPath(p) {
+  if (!p || typeof p !== 'string') return true;
+  const normalized = path.resolve(p);
+  const rootPaths = ['/', '/System', '/Library', '/Applications', '/usr', '/bin', '/sbin', '/etc', '/var', '/private', '/Volumes', os.homedir()];
+  return rootPaths.includes(normalized) || normalized === path.parse(normalized).root;
+}
+
 ipcMain.handle('fs:readText', async (_event, filePath) => {
   try {
+    const stat = fs.statSync(filePath);
+    if (!stat.isFile()) return { error: 'Not a regular file' };
     const content = fs.readFileSync(filePath, 'utf-8');
     return { content: content.slice(0, 200000) };
   } catch (err) { return { error: err.message }; }
@@ -314,6 +323,7 @@ ipcMain.handle('fs:readText', async (_event, filePath) => {
 
 ipcMain.handle('fs:writeFile', async (_event, filePath, content) => {
   try {
+    if (isProtectedSystemPath(filePath)) return { error: 'Acceso denegado a ruta protegida del sistema.' };
     fs.writeFileSync(filePath, content, 'utf-8');
     return { success: true };
   } catch (err) { return { error: err.message }; }
@@ -321,8 +331,11 @@ ipcMain.handle('fs:writeFile', async (_event, filePath, content) => {
 
 ipcMain.handle('fs:rename', async (_event, oldPath, newName) => {
   const dir = path.dirname(oldPath);
-  const newPath = path.join(dir, newName);
+  const safeName = path.basename(newName);
+  if (!safeName || safeName === '.' || safeName === '..') return { error: 'Nombre de archivo inválido' };
+  const newPath = path.join(dir, safeName);
   try {
+    if (isProtectedSystemPath(oldPath)) return { error: 'Acceso denegado a ruta protegida del sistema.' };
     fs.renameSync(oldPath, newPath);
     return { success: true, newPath };
   } catch (err) { return { error: err.message }; }
@@ -341,6 +354,7 @@ ipcMain.handle('fs:copy', async (_event, sourcePaths, destDir) => {
 ipcMain.handle('fs:move', async (_event, sourcePaths, destDir) => {
   try {
     for (const src of sourcePaths) {
+      if (isProtectedSystemPath(src)) return { error: 'Acceso denegado a ruta protegida del sistema.' };
       const dest = path.join(destDir, path.basename(src));
       try {
         fs.renameSync(src, dest);
@@ -392,6 +406,9 @@ ipcMain.handle('fs:create-folder', async (_event, folderPath) => {
 ipcMain.handle('fs:delete', async (_event, targetPaths) => {
   try {
     for (const p of targetPaths) {
+      if (isProtectedSystemPath(p)) {
+        return { error: 'Acceso denegado: no se puede eliminar un directorio crítico del sistema.' };
+      }
       fs.rmSync(p, { recursive: true, force: true });
     }
     return { success: true };
@@ -402,7 +419,7 @@ ipcMain.handle('fs:openFile', async (_event, filePath) => {
   shell.openPath(filePath);
 });
 
-// A tiny ID3v2 parser to extract album art (APIC frame)
+// A tiny hardened ID3v2 parser to extract album art (APIC frame)
 ipcMain.handle('fs:getAlbumArt', async (_event, filePath) => {
   let fd = null;
   try {
@@ -417,27 +434,31 @@ ipcMain.handle('fs:getAlbumArt', async (_event, filePath) => {
     fs.readSync(fd, tagsBuf, 0, tagsBuf.length, 10);
     
     let offset = 0;
-    while (offset < tagsBuf.length - 10) {
+    while (offset <= tagsBuf.length - 10) {
       const frameId = tagsBuf.toString('ascii', offset, offset + 4);
       if (frameId === '\x00\x00\x00\x00') break;
       const frameSize = tagsBuf.readUInt32BE(offset + 4);
+      if (frameSize <= 0 || frameSize > tagsBuf.length - offset - 10) break;
+      
       if (frameId === 'APIC') {
         let frameOffset = offset + 10;
         const textEncoding = tagsBuf[frameOffset++];
         // Mime type
         let mimeType = '';
-        while (tagsBuf[frameOffset] !== 0 && frameOffset < tagsBuf.length) { mimeType += String.fromCharCode(tagsBuf[frameOffset++]); }
+        while (frameOffset < tagsBuf.length && tagsBuf[frameOffset] !== 0) { mimeType += String.fromCharCode(tagsBuf[frameOffset++]); }
         frameOffset++; // null byte
-        const pictureType = tagsBuf[frameOffset++];
-        // Description
-        if (textEncoding === 0 || textEncoding === 3) {
-          while (tagsBuf[frameOffset] !== 0 && frameOffset < tagsBuf.length) frameOffset++; frameOffset++;
-        } else {
-          while ((tagsBuf[frameOffset] !== 0 || tagsBuf[frameOffset+1] !== 0) && frameOffset < tagsBuf.length - 1) frameOffset += 2; frameOffset += 2;
-        }
-        if (frameOffset < offset + 10 + frameSize) {
-          const imgData = tagsBuf.subarray(frameOffset, offset + 10 + frameSize);
-          return `data:${mimeType || 'image/jpeg'};base64,${imgData.toString('base64')}`;
+        if (frameOffset < tagsBuf.length) {
+          const pictureType = tagsBuf[frameOffset++];
+          // Description
+          if (textEncoding === 0 || textEncoding === 3) {
+            while (frameOffset < tagsBuf.length && tagsBuf[frameOffset] !== 0) frameOffset++; frameOffset++;
+          } else {
+            while (frameOffset < tagsBuf.length - 1 && (tagsBuf[frameOffset] !== 0 || tagsBuf[frameOffset+1] !== 0)) frameOffset += 2; frameOffset += 2;
+          }
+          if (frameOffset < offset + 10 + frameSize && frameOffset < tagsBuf.length) {
+            const imgData = tagsBuf.subarray(frameOffset, Math.min(tagsBuf.length, offset + 10 + frameSize));
+            return `data:${mimeType || 'image/jpeg'};base64,${imgData.toString('base64')}`;
+          }
         }
       }
       offset += 10 + frameSize;

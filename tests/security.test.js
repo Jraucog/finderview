@@ -83,4 +83,20 @@ describe('FinderView Security Audit Test Suite', () => {
     });
   });
 
+  describe('6. Critical System Path & Traversal Protection', () => {
+    test('main.js must declare isProtectedSystemPath to guard root and system directories', () => {
+      const mainContent = fs.readFileSync(path.join(__dirname, '..', 'main.js'), 'utf-8');
+      assert.match(mainContent, /isProtectedSystemPath/, 'Path protection helper must exist');
+      assert.match(mainContent, /path\.basename\(newName\)/, 'Rename must sanitize path traversal');
+    });
+  });
+
+  describe('7. ID3v2 Parser Bounds & Memory Safety', () => {
+    test('ID3 parser must enforce buffer boundary and frame size checks', () => {
+      const mainContent = fs.readFileSync(path.join(__dirname, '..', 'main.js'), 'utf-8');
+      assert.match(mainContent, /frameSize\s*<=\s*0/, 'Parser must break on zero or negative frame size');
+      assert.match(mainContent, /tagsBuf\.subarray/, 'Parser must safely slice image buffer');
+    });
+  });
+
 });
