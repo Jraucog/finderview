@@ -11,6 +11,8 @@
 [![Security Audit](https://img.shields.io/badge/Security%20Audit-100%25%20Passed-brightgreen.svg)](#security--hardening)
 [![Powered by Antigravity](https://img.shields.io/badge/%E2%9C%A6%20Powered%20by-Antigravity-00e5ff.svg)](#)
 
+**English** | [Español](README.es.md)
+
 </div>
 
 ---

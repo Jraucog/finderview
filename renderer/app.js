@@ -22,6 +22,7 @@ const state = {
   selectedItems: new Set(),
   focusedIdx:    -1,
   theme:        'default',
+  lang:         'es', // 'es' | 'en'
   viewMode:     'list',
   sort:          { col:'name', dir:'asc' },
   visibleCols:   ['name','mtime','size'],
@@ -43,6 +44,109 @@ const state = {
   editorModified:false,
   editorSaveFn:  null,
 };
+
+/* ── Multilingual i18n Dictionary ───────────────────────────────────────────── */
+const I18N = {
+  es: {
+    settings: 'Configuración',
+    view: 'Vista',
+    language: 'Idioma',
+    spanish: 'Español (ES)',
+    english: 'English (US)',
+    themes: 'Temas',
+    columns: 'Columnas',
+    favorites: 'Favoritos',
+    recents: 'Recientes',
+    frequents: 'Más Frecuentes',
+    home: 'Inicio',
+    trash: 'Papelera',
+    icloud: 'iCloud Drive',
+    newFolder: 'Nueva Carpeta',
+    newFile: 'Nuevo Archivo (.txt)',
+    openTerminal: 'Abrir en Terminal',
+    openEditor: 'Abrir en VS Code',
+    copyPath: 'Copiar Ruta Actual',
+    splitView: 'Modo Doble Panel (Split View)',
+    listView: 'Vista Lista',
+    gridView: 'Vista Íconos (Grid)',
+    galleryView: 'Vista Galería',
+    welcomeTitle: 'Selecciona una carpeta para comenzar',
+    welcomeSub: 'Elige un acceso rápido a continuación o haz clic en cualquier carpeta de la barra lateral izquierda.',
+    browse: 'Examinar...',
+    noActiveTab: 'Sin pestaña activa',
+    emptyFolder: 'Esta carpeta está vacía',
+    trashMac: 'Papelera de macOS',
+    openInFinder: 'Abrir en Finder',
+    emptyTrash: 'Vaciar Papelera',
+    diskAnalyzer: 'Analizador de Espacio en Disco',
+    giantFiles: 'Buscar Archivos Gigantes (> 500 MB)',
+    largeFiles: 'Buscar Archivos Grandes (> 100 MB)',
+    oldFiles1Y: 'Buscar Archivos Antiguos (> 1 Año)',
+    oldFiles6M: 'Buscar Archivos Antiguos (> 6 Meses)',
+    modifiedToday: 'Buscar Archivos Modificados Hoy',
+    screenshots: 'Buscar Capturas de Pantalla',
+    emptyFolders: 'Buscar Carpetas Vacías',
+    devCaches: 'Buscar Caches y node_modules',
+    cleanDsStore: 'Limpiar Archivos .DS_Store Ocultos',
+    reopenTab: 'Reabrir Pestaña Cerrada',
+    newTabShort: 'Nueva pestaña',
+    diskToolsShort: 'Herramientas de disco',
+    sidebarToggle: 'Ocultar / Mostrar Barra Lateral',
+    previewToggle: 'Ocultar / Mostrar Previsualización',
+  },
+  en: {
+    settings: 'Settings',
+    view: 'View',
+    language: 'Language',
+    spanish: 'Español (ES)',
+    english: 'English (US)',
+    themes: 'Themes',
+    columns: 'Columns',
+    favorites: 'Favorites',
+    recents: 'Recents',
+    frequents: 'Most Frequent',
+    home: 'Home',
+    trash: 'Trash',
+    icloud: 'iCloud Drive',
+    newFolder: 'New Folder',
+    newFile: 'New File (.txt)',
+    openTerminal: 'Open in Terminal',
+    openEditor: 'Open in VS Code',
+    copyPath: 'Copy Current Path',
+    splitView: 'Dual Pane Mode (Split View)',
+    listView: 'List View',
+    gridView: 'Icon Grid View',
+    galleryView: 'Gallery View',
+    welcomeTitle: 'Select a folder to get started',
+    welcomeSub: 'Choose a quick shortcut below or click any folder in the left sidebar.',
+    browse: 'Browse...',
+    noActiveTab: 'No active tab',
+    emptyFolder: 'This folder is empty',
+    trashMac: 'macOS Trash',
+    openInFinder: 'Open in Finder',
+    emptyTrash: 'Empty Trash',
+    diskAnalyzer: 'Disk Space Analyzer',
+    giantFiles: 'Find Giant Files (> 500 MB)',
+    largeFiles: 'Find Large Files (> 100 MB)',
+    oldFiles1Y: 'Find Old Files (> 1 Year)',
+    oldFiles6M: 'Find Old Files (> 6 Months)',
+    modifiedToday: 'Find Files Modified Today',
+    screenshots: 'Find Screenshots',
+    emptyFolders: 'Find Empty Folders',
+    devCaches: 'Find Caches and node_modules',
+    cleanDsStore: 'Clean Hidden .DS_Store Files',
+    reopenTab: 'Reopen Closed Tab',
+    newTabShort: 'New tab',
+    diskToolsShort: 'Disk tools',
+    sidebarToggle: 'Hide / Show Sidebar',
+    previewToggle: 'Hide / Show Preview Panel',
+  }
+};
+
+function t(key) {
+  const lang = state.lang || 'es';
+  return I18N[lang]?.[key] || I18N['es']?.[key] || key;
+}
 
 /* ── File type utils ─────────────────────────────────────────────────────────── */
 const AUDIO_EXTS = new Set(['mp3','wav','flac','aif','aiff','m4a','ogg','opus','wma']);
@@ -91,6 +195,7 @@ function loadSettings() {
     if(s.showRecents!==undefined) state.showRecents=s.showRecents;
     if(s.showFrequents!==undefined) state.showFrequents=s.showFrequents;
     if(s.theme) state.theme = s.theme;
+    if(s.lang)  state.lang  = s.lang;
     if(s.fileTags)    state.fileTags    = s.fileTags;
     if(s.colWidths)   state.colWidths   = s.colWidths;
     // Apply saved column widths to CSS
@@ -103,6 +208,7 @@ function loadSettings() {
 function saveSettings() {
   localStorage.setItem('fv-settings', JSON.stringify({
     sort:state.sort, visibleCols:state.visibleCols, viewMode:state.viewMode, theme:state.theme,
+    lang:state.lang,
     showHidden:state.showHidden, compactMode:state.compactMode, compactSidebar:state.compactSidebar,
     sidebarVisible:state.sidebarVisible, showRecents:state.showRecents, showFrequents:state.showFrequents,
     fileTags:state.fileTags, colWidths:state.colWidths,
@@ -1975,7 +2081,36 @@ function closeSettings() {
 }
 function renderSettings() {
   const body=document.getElementById('settings-body'); body.innerHTML='';
-  body.appendChild(makeSettingsSection('Vista',[
+
+  // ── Language Selector ──
+  const langs = [
+    { id: 'es', label: '🇪🇸 Español', desc: 'Español (Latinoamérica / España)' },
+    { id: 'en', label: '🇺🇸 English', desc: 'English (United States)' },
+  ];
+  const langRows = langs.map(l => {
+    const isActive = (state.lang || 'es') === l.id;
+    const row = document.createElement('div'); row.className = 's-row';
+    row.style.cssText = 'cursor:pointer;border-radius:6px;' + (isActive ? 'background:var(--bg-row-sel);' : '');
+    const ic = document.createElement('span'); ic.className='s-row-icon'; ic.textContent=l.id==='es'?'🇪🇸':'🇺🇸';
+    const te = document.createElement('div'); te.className='s-row-text';
+    const tl = document.createElement('div'); tl.className='s-row-title'; tl.textContent=l.label;
+    const sb = document.createElement('div'); sb.className='s-row-sub'; sb.textContent=l.desc;
+    te.appendChild(tl); te.appendChild(sb);
+    row.appendChild(ic); row.appendChild(te);
+    if(isActive) { const ck = document.createElement('span'); ck.textContent='✓'; ck.style.cssText='color:var(--accent);font-weight:700;font-size:14px;'; row.appendChild(ck); }
+    row.addEventListener('click', ()=>{
+      state.lang = l.id;
+      saveSettings();
+      buildSidebar();
+      renderBreadcrumb(state.currentPath);
+      if (!tabs.length) showWelcomeScreen();
+      renderSettings();
+    });
+    return row;
+  });
+  body.appendChild(makeSettingsSection(t('language'), langRows));
+
+  body.appendChild(makeSettingsSection(t('view'),[
     makeToggleRow('🗂️','Vista de lista','Vista predeterminada al abrir carpetas',state.viewMode==='list',v=>{state.viewMode=v?'list':'grid';setView(state.viewMode);saveSettings();}),
     makeToggleRow('📐','Vista compacta de archivos','Mayor densidad de información en archivos',state.compactMode,v=>{state.compactMode=v;saveSettings();document.getElementById('file-list').classList.toggle('compact-mode', v); document.getElementById('content').classList.toggle('compact-grid', v);}),
     makeToggleRow('📑','Compactar barra lateral','Menor espaciado y tamaño en la barra lateral izquierda',state.compactSidebar,v=>{state.compactSidebar=v;saveSettings();document.getElementById('sidebar')?.classList.toggle('compact-sidebar', v);}),
