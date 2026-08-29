@@ -17,6 +17,29 @@
 
 ---
 
+## ⚡ ¿Por qué FinderView? (FinderView vs. Apple Finder)
+
+> **Eleva tu productividad al gestionar archivos.** Creado desde cero para desarrolladores, diseñadores y usuarios avanzados que aman macOS pero necesitan mayor control, velocidad y herramientas modernas.
+
+| Característica / Función | 🍎 Apple Finder | 🚀 FinderView Pro |
+| :--- | :---: | :---: |
+| **Árbol en Acordeón en Línea** | ❌ No (Vista de columnas tosca) | ✅ **Sí (Estilo VS Code con despliegue en línea)** |
+| **Doble Panel / Vista Dividida (`⌘D`)** | ❌ No (Requiere múltiples ventanas) | ✅ **Sí (Dos paneles en paralelo en 1 ventana)** |
+| **Pila de Acumulación (Drop Stack)** | ❌ No | ✅ **Sí (Acumula archivos de varias carpetas)** |
+| **Paleta de Comandos Pro (`⌘K`/`⌘P`)** | ❌ Spotlight básico | ✅ **Sí (Acciones rápidas y herramientas de disco)** |
+| **Reabrir Pestañas Cerradas (`⌘⇧T`)** | ❌ No (Se pierde el historial) | ✅ **Sí (Restaura al instante con navegación)** |
+| **Pantalla de Inicio Inteligente al Cerrar** | ❌ Cierra la ventana de golpe | ✅ **Sí (Dashboard interactivo de accesos rápidos)** |
+| **Buscador de Archivos Gigantes y Antiguos** | ❌ Requiere apps de pago (CleanMyMac) | ✅ **Sí (>500MB, >100MB, >1 año, carpetas vacías)** |
+| **Limpiador de Caches y `node_modules`** | ❌ No | ✅ **Sí (Detección y purga de dependencias)** |
+| **Analizador Visual de Espacio en Disco** | ❌ Lista básica en Ajustes de macOS | ✅ **Sí (Gráfico interactivo por categorías)** |
+| **Reproductor de Música en Segundo Plano** | ❌ Se detiene al cerrar la vista previa | ✅ **Sí (Música continua + Carátulas ID3v2)** |
+| **Editor de Código y Texto Integrado (`⌘S`)** | ❌ Abre app externa obligatoria | ✅ **Sí (Editor con resaltado y guardado directo)** |
+| **Temas Visuales Personalizados** | ❌ Solo Claro/Oscuro del sistema | ✅ **Sí (7 Temas: Antigravity, Goku Blue, Pink...)** |
+| **Soporte Multilenguaje (i18n)** | Idioma del sistema | ✅ **Sí (Español / Inglés conmutables)** |
+| **Código Abierto y Seguro** | ❌ Propietario y cerrado | ✅ **Sí (Licencia MIT y 100% auditable)** |
+
+---
+
 ## ✨ Características Principales
 
 ### 📑 Pestañas Nativas y Pantalla de Inicio Inteligente

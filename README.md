@@ -17,6 +17,29 @@
 
 ---
 
+## ⚡ Why FinderView? (FinderView vs. macOS Finder)
+
+> **Supercharge your daily file management.** Designed from the ground up for developers, designers, and power users who love macOS but need more control, speed, and modern tools.
+
+| Feature / Capability | 🍎 Apple Finder | 🚀 FinderView Pro |
+| :--- | :---: | :---: |
+| **Inline Folder Accordion Tree** | ❌ No (Clunky column view) | ✅ **Yes (VS Code–style inline expansion)** |
+| **Dual-Pane Split View (`⌘D`)** | ❌ No (Requires multiple windows) | ✅ **Yes (Side-by-side in single window)** |
+| **Multi-File Staging Dock (Drop Stack)** | ❌ No | ✅ **Yes (Accumulate files across folders)** |
+| **Developer Command Palette (`⌘K`/`⌘P`)** | ❌ Basic Spotlight only | ✅ **Yes (Full actions & instant disk tools)** |
+| **Reopen Closed Tabs (`⌘⇧T`)** | ❌ No (Once closed, history lost) | ✅ **Yes (Instant restore with history)** |
+| **Smart Welcome Hub on Tab Close** | ❌ Abruptly closes window | ✅ **Yes (Fast folder launcher dashboard)** |
+| **Built-in Giant/Old Files Cleaner** | ❌ Requires paid 3rd-party apps | ✅ **Yes (>500MB, >100MB, >1yr, empty dirs)** |
+| **Dev Cache & `node_modules` Purger** | ❌ No | ✅ **Yes (Instant junk scan & cleanup)** |
+| **Interactive Disk Space Visualizer** | ❌ Basic storage list in Settings | ✅ **Yes (Categorized visual storage bar)** |
+| **In-App Persistent Audio Player & ID3** | ❌ Preview stops on click | ✅ **Yes (Background music + Album Art)** |
+| **Built-in Code & Text Editor (`⌘S`)** | ❌ Opens external app | ✅ **Yes (Syntax-highlighted inline editor)** |
+| **Custom UI Themes** | ❌ System Dark/Light only | ✅ **Yes (7 Themes: Cosmic, Goku, Pink...)** |
+| **Multilingual Support (i18n)** | System language | ✅ **Yes (English / Spanish switchable)** |
+| **Open Source & Extensible** | ❌ Proprietary | ✅ **Yes (MIT License)** |
+
+---
+
 ## ✨ Features Overview
 
 ### 📑 Native Multi-Tabs & Smart Session Hub
