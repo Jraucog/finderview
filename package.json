@@ -13,6 +13,10 @@
     "disk-management",
     "antigravity"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jraucog/finderview.git"
+  },
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --mac --dir",
