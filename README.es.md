@@ -8,6 +8,7 @@
 
 [![License: MIT](https://img.shields.io/badge/Licencia-MIT-blue.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Plataforma-macOS%20(Apple%20Silicon%20%26%20Intel)-black.svg)](#)
+[![CI](https://github.com/Jraucog/finderview/actions/workflows/ci.yml/badge.svg)](https://github.com/Jraucog/finderview/actions)
 [![Security Audit](https://img.shields.io/badge/Auditor%C3%ADa%20de%20Seguridad-100%25%20Aprobada-brightgreen.svg)](#-seguridad-y-fortalecimiento)
 [![Powered by Antigravity](https://img.shields.io/badge/%E2%9C%A6%20Powered%20by-Antigravity-00e5ff.svg)](#)
 
